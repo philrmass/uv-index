@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider preact build",
     "deploy": "gh-pages -d build",
-    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider preact watch --clear=false",
+    "dev": "DEV=true cross-env NODE_OPTIONS=--openssl-legacy-provider preact watch --clear=false",
     "eslint": "eslint 'src/**'",
     "lint": "yarn eslint && yarn stylelint",
     "predeploy": "yarn build",
