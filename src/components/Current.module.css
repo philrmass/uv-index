@@ -1,0 +1,13 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #e8e8ff;
+  color: blue;
+  height: 100%;
+}
+.index {
+  font-size: 96px;
+  font-variation-settings: 'wght' 400, 'wdth' 50;
+}

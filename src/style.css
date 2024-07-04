@@ -1,8 +1,15 @@
-html, body {
-	font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
-	font-weight: 400;
+:root {
+  --font: "Nunito", sans-serif;
 }
 
-h1 {
-	text-align: center;
+@font-face {
+  font-family: Nunito;
+  src: url("./assets/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf") format("truetype");
+}
+
+html, body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  font-variation-settings: 'wght' 300, 'wdth' 50;
 }
