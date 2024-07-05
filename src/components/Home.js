@@ -4,10 +4,12 @@ import Current from './Current';
 import Graph from './Graph';
 import styles from './Home.module.css';
 
-// ??? layout vertical, max width
-// ??? add current and graph components
 // ??? set lat and long from location on visible
 // ??? refresh on visible when lat, long changed enough or new hour
+// ??? integrate forecast with all
+// ??? graph all values, gey for past
+// ??? scroll to current time on viisible
+// ??? button to go to now
 
 // ??? get location name on new lat, long
 //https://nominatim.openstreetmap.org
@@ -15,7 +17,6 @@ import styles from './Home.module.css';
 //format=json,geocodejson,jsonv2
 //addressdetails=1
 
-// ??? add Current display
 // ??? add Graph with scroll, with Now button
 // ??? grey out old values
 
