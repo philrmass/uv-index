@@ -1,3 +1,10 @@
 .main {
-  background: #efe;
+  height: 25vh;
+  padding: 16px;
+}
+
+.graph {
+  height: 100%;
+  border-radius: 8px;
+  background: #eee;
 }

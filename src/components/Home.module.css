@@ -3,7 +3,7 @@
   inset: 0;
   display: flex;
   justify-content: center;
-  background: #888;
+  background: var(--grey);
 }
 
 .content {

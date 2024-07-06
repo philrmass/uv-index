@@ -1,5 +1,9 @@
 :root {
+  --black: #282828;
   --font: "Nunito", sans-serif;
+  --light-grey: #d0d0d0;
+  --grey: #808080;
+  --off-white: #f8f8f8;
 }
 
 @font-face {
@@ -12,4 +16,34 @@ html, body {
   font-family: var(--font);
   font-size: 16px;
   font-variation-settings: 'wght' 300, 'wdth' 50;
+  color: var(--black);
+}
+
+button {
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 4px;
+  font-size: inherit;
+  background: var(--black);
+  color: var(--off-white);
+}
+
+.low {
+  background: green;
+}
+
+.moderate {
+  background: yellow;
+}
+
+.high {
+  background: orange;
+}
+
+.very {
+  background: red;
+}
+
+.extreme {
+  background: purple;
 }
