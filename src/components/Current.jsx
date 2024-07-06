@@ -4,7 +4,6 @@ import {
   printDay,
   printTime,
 } from '../utilities/general';
-import { version } from '../../package.json';
 import styles from './Current.module.css';
 
 export default function Current({
@@ -38,9 +37,6 @@ export default function Current({
             Refresh
           </button>
         ) }
-      </div>
-      <div className={styles.version}>
-        {`v${version}`}
       </div>
     </div>
   );

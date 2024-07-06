@@ -4,6 +4,7 @@ import {
   printDay,
   printTime,
 } from '../utilities/general';
+import { version } from '../../package.json';
 import styles from './Graph.module.css';
 
 function getDays(all) {
@@ -14,48 +15,51 @@ function getDays(all) {
     day: printDay(value.time),
     level: getLevel(value.uvi),
     time: printTime(value.time),
+    hour: (new Date(value.time)).getHours(),
   }));
 
   const weeks = Map.groupBy(withDay, ({ day }) => day);
   return [...weeks.values()];
 }
 
-// ??? uvi on click
-// ??? tick mark to label
-export default function Graph({ all, now }) {
+function getBarPercentage(uvi) {
+  const min = 2;
+  const range = 100 - min;
+  const uviRange = 11;
+  const ratio = uvi / uviRange;
+
+  return min + ratio * range;
+}
+
+export default function Graph({ all }) {
   const days = useMemo(() => getDays(all), [all]);
 
-  const renderHour = (hour, index) => {
-    // ??? calculate height: 0 - 11
-    const style = { height: '70%' };
-    const time = index % 2 ? ' ' : hour.time;
+  const handleBarClick = (uvi) => {
+    console.log('BAR-CLICK', uvi);
+  };
+
+  const renderHour = (hour) => {
+    const percentage = getBarPercentage(hour.uvi);
+    const style = { height: `${percentage}%` };
+    const time = hour.hour % 2 ? ' ' : hour.time;
 
     return (
-      <div key={hour.at} className={styles.hour}>
+      <div
+        key={hour.at}
+        id={hour.at}
+        className={styles.hour}
+      >
         <div className={styles.bar}>
           <div
             className={`${styles.fill} ${hour.level}`}
             style={style}
-          >
-          </div>
+            onClick={() => handleBarClick(hour.uvi)}
+          />
         </div>
         <div className={styles.time}>
           { time }
         </div>
       </div>
-      /*
-      <div key={hour.at} className={styles.hour}>
-        <div>
-          <div
-            className={`${styles.bar} ${hour.level}`}
-            style={style}
-          />
-          <div className={styles.time}>
-            { hour.time }
-          </div>
-        </div>
-      </div>
-      */
     );
   };
 
@@ -65,7 +69,7 @@ export default function Graph({ all, now }) {
     return (
       <div key={hours[0].at} className={styles.day}>
         <div className={styles.hours}>
-          { hours.map((hour, index) => renderHour(hour, index)) }
+          { hours.map((hour) => renderHour(hour)) }
         </div>
         <div className={styles.label}>
           { label }
@@ -76,9 +80,11 @@ export default function Graph({ all, now }) {
 
   return (
     <div className={styles.main}>
-      {now.time}
       <div className={styles.graph}>
         { days.map((day) => renderDay(day)) }
+      </div>
+      <div className={styles.version}>
+        {`v${version}`}
       </div>
     </div>
   );

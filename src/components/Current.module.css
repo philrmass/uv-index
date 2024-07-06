@@ -32,10 +32,3 @@
 .time {
   margin-left: 0.4em;
 }
-
-.version {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  font-size: 12px;
-}

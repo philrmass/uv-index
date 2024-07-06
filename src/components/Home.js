@@ -8,12 +8,13 @@ import styles from './Home.module.css';
 const portlandLat = 45.475901;
 const portlandLong = -122.649002;
 
-// ??? implement graph, grey for past
-// ??? scroll to current time on viisible
-// ??? button to go to now
-// ??? integrate forecast with all
+// ??? add uvi popup at top of graph on bar click, shadow
 // ??? better colors
-// ??? make location clickable for new location
+// ??? integrate forecast with existing values
+// ??? show grey for past times on graph
+// ??? scroll to now on not viisible
+// ??? scroll to now on current uvi click
+// ??? make location clickable to update location
 
 async function getData(lat, long) {
   const baseUrl = 'https://currentuvindex.com/api/v1/uvi';
@@ -32,9 +33,8 @@ async function getAddress(lat, long) {
   return address;
 }
 
-// ??? implement, update the correct bins
-function addForecast(_all, forecast) {
-  return [...forecast];
+function addForecast(_all, now, forecast) {
+  return [now, ...forecast];
 }
 
 export default function Home() {
@@ -87,7 +87,7 @@ export default function Home() {
       (async () => {
         const data = await getData(lat, long);
         setNow(data.now);
-        setAll((last) => addForecast(last, data.forecast));
+        setAll((last) => addForecast(last, data.now, data.forecast));
         setRefresh(false);
       })();
     }
