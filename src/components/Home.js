@@ -13,6 +13,7 @@ const portlandLong = -122.649002;
 // ??? button to go to now
 // ??? integrate forecast with all
 // ??? better colors
+// ??? make location clickable for new location
 
 async function getData(lat, long) {
   const baseUrl = 'https://currentuvindex.com/api/v1/uvi';
@@ -92,6 +93,10 @@ export default function Home() {
     }
   }, [refresh, lat, long, setAll, setNow]);
 
+  const handleLocationClick = () => {
+    console.log('LOC-CLICK');
+  };
+
   return (
     <div className={styles.screen}>
       <div className={styles.content}>
@@ -99,7 +104,7 @@ export default function Home() {
           <Current
             address={address}
             now={now}
-            setRefresh={setRefresh}
+            onLocationClick={handleLocationClick}
           />
         </div>
         <Graph

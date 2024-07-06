@@ -7,11 +7,10 @@ export function isCurrentHour(dateStr) {
   return now.getTime() === date.getTime();
 }
 
-export function printTime(dateStr) {
+export function printDay(dateStr) {
   const date = new Date(dateStr);
   const options = {
     day: 'numeric',
-    hour: 'numeric',
     month: 'short',
     weekday: 'short',
   };
@@ -19,7 +18,14 @@ export function printTime(dateStr) {
   return date.toLocaleDateString('en-US', options);
 }
 
-export function getStyle(uvi) {
+export function printTime(dateStr) {
+  const date = new Date(dateStr);
+  const options = { hour: 'numeric' };
+
+  return date.toLocaleTimeString('en-US', options);
+}
+
+export function getLevel(uvi) {
   if (uvi >= 11) {
     return 'extreme';
   } else if (uvi >= 8) {
