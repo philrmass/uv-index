@@ -40,7 +40,6 @@ export default function Graph({ all }) {
   const isVisible = useVisibility();
 
   useEffect(() => {
-    console.log('SCROLL', graphRef.current.scrollLeft);
     graphRef.current.scrollLeft = 0;
   }, [isVisible]);
 
