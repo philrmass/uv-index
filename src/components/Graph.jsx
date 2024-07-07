@@ -1,4 +1,5 @@
-import { useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useVisibility } from 'utilities/hooks';
 import {
   getLevel,
   printDay,
@@ -33,9 +34,20 @@ function getBarPercentage(uvi) {
 
 export default function Graph({ all }) {
   const days = useMemo(() => getDays(all), [all]);
+  const [popup, setPopup] = useState(null);
+  const [timeoutId, setTimeoutId] = useState();
+  const graphRef = useRef();
+  const isVisible = useVisibility();
 
-  const handleBarClick = (uvi) => {
-    console.log('BAR-CLICK', uvi);
+  useEffect(() => {
+    console.log('SCROLL', graphRef.current.scrollLeft);
+    graphRef.current.scrollLeft = 0;
+  }, [isVisible]);
+
+  const handleBarClick = (uvi, level) => {
+    clearTimeout(timeoutId);
+    setPopup({ level, uvi });
+    setTimeoutId(setTimeout(() => setPopup(null), 2000));
   };
 
   const renderHour = (hour) => {
@@ -53,7 +65,7 @@ export default function Graph({ all }) {
           <div
             className={`${styles.fill} ${hour.level}`}
             style={style}
-            onClick={() => handleBarClick(hour.uvi)}
+            onClick={() => handleBarClick(hour.uvi, hour.level)}
           />
         </div>
         <div className={styles.time}>
@@ -80,9 +92,19 @@ export default function Graph({ all }) {
 
   return (
     <div className={styles.main}>
-      <div className={styles.graph}>
+      <div
+        ref={graphRef}
+        className={styles.graph}
+      >
         { days.map((day) => renderDay(day)) }
       </div>
+      { popup && (
+        <div className={styles.popup}>
+          <div className={popup.level}>
+            { popup.uvi }
+          </div>
+        </div>
+      ) }
       <div className={styles.version}>
         {`v${version}`}
       </div>

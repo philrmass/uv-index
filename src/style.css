@@ -29,21 +29,21 @@ button {
 }
 
 .low {
-  background: green;
+  background: #00e800;
 }
 
 .moderate {
-  background: yellow;
+  background: #f4f400;
 }
 
 .high {
-  background: orange;
+  background: #ffb000;
 }
 
 .very {
-  background: red;
+  background: #ff8080;
 }
 
 .extreme {
-  background: purple;
+  background: #d070ff;
 }

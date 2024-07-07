@@ -2,7 +2,7 @@
   --bar: 16px;
   --gap: 8px;
 
-  background: #0000;
+  position: relative;
   padding: 16px;
 }
 
@@ -32,6 +32,7 @@
   position: relative;
   left: calc(0.5 * var(--bar));
   white-space: pre;
+  user-select: none;
 }
 
 .hour {
@@ -56,6 +57,29 @@
 .time {
   white-space: pre;
   font-size: 12px;
+  user-select: none;
+}
+
+.popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.popup div {
+  height: 1.8em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1;
+  padding: 0.2em;
+  border: 1px solid var(--light-grey);
+  border-radius: 50%;
+  font-size: 20px;
+  font-variation-settings: 'wght' 400, 'wdth' 50;
 }
 
 .version {
@@ -64,4 +88,5 @@
   right: 16px;
   font-size: 12px;
   color: var(--grey);
+  user-select: none;
 }

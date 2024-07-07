@@ -1,6 +1,5 @@
 import {
   getLevel,
-  isCurrentHour,
   printDay,
   printTime,
 } from '../utilities/general';
@@ -13,9 +12,7 @@ export default function Current({
 }) {
   const day = printDay(now.time);
   const time = printTime(now.time);
-  const isCurrent = isCurrentHour(now.time);
   const level = getLevel(now.uvi);
-  // ??? make location clickable
 
   return (
     <div className={styles.main}>
@@ -30,13 +27,13 @@ export default function Current({
               { time }
             </span>
           </div>
-          <div>{ address }</div>
+          <div
+            className={styles.location}
+            onClick={onLocationClick}
+          >
+            { address }
+          </div>
         </div>
-        { !isCurrent && (
-          <button onClick={() => onLocationClick(true)}>
-            Refresh
-          </button>
-        ) }
       </div>
     </div>
   );

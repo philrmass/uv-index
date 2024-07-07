@@ -8,14 +8,6 @@ import styles from './Home.module.css';
 const portlandLat = 45.475901;
 const portlandLong = -122.649002;
 
-// ??? add uvi popup at top of graph on bar click, shadow
-// ??? better colors
-// ??? integrate forecast with existing values
-// ??? show grey for past times on graph
-// ??? scroll to now on not viisible
-// ??? scroll to now on current uvi click
-// ??? make location clickable to update location
-
 async function getData(lat, long) {
   const baseUrl = 'https://currentuvindex.com/api/v1/uvi';
   const url = `${baseUrl}?latitude=${lat}&longitude=${long}`;
@@ -33,10 +25,6 @@ async function getAddress(lat, long) {
   return address;
 }
 
-function addForecast(_all, now, forecast) {
-  return [now, ...forecast];
-}
-
 export default function Home() {
   const [refresh, setRefresh] = useState(false);
   const [lat, setLat] = useLocalStorage('uLat', portlandLat);
@@ -48,27 +36,10 @@ export default function Home() {
   const isCurrentTime = isCurrentHour(now.time);
 
   useEffect(() => {
-    if (isVisible) {
-      const hasGeo = typeof navigator.geolocation?.getCurrentPosition === 'function';
-
-      if (hasGeo) {
-        navigator.geolocation?.getCurrentPosition((pos) => {
-          const newLat = pos.coords.latitude;
-          const newLong = pos.coords.longitude;
-
-          setLat(newLat);
-          setLong(newLong);
-        });
-      } else {
-        setLat(portlandLat);
-        setLong(portlandLong);
-      }
-
-      if (!isCurrentTime) {
-        setRefresh(true);
-      }
+    if (isVisible && !isCurrentTime) {
+      setRefresh(true);
     }
-  }, [isVisible, isCurrentTime, setLat, setLong]);
+  }, [isVisible, isCurrentTime]);
 
   useEffect(() => {
     (async () => {
@@ -87,14 +58,27 @@ export default function Home() {
       (async () => {
         const data = await getData(lat, long);
         setNow(data.now);
-        setAll((last) => addForecast(last, data.now, data.forecast));
+        setAll([data.now, ...data.forecast]);
         setRefresh(false);
       })();
     }
   }, [refresh, lat, long, setAll, setNow]);
 
   const handleLocationClick = () => {
-    console.log('LOC-CLICK');
+    const hasGeo = typeof navigator.geolocation?.getCurrentPosition === 'function';
+
+    if (hasGeo) {
+      navigator.geolocation?.getCurrentPosition((pos) => {
+        const newLat = pos.coords.latitude;
+        const newLong = pos.coords.longitude;
+
+        setLat(newLat);
+        setLong(newLong);
+      });
+    } else {
+      setLat(portlandLat);
+      setLong(portlandLong);
+    }
   };
 
   return (

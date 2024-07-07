@@ -9,15 +9,16 @@
 }
 
 .index {
+  height: 1.8em;
   aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid var(--light-grey);
   border-radius: 50%;
-  padding: 0.2em;
   font-size: 72px;
   font-variation-settings: 'wght' 400, 'wdth' 50;
+  user-select: none;
 }
 
 .info {
@@ -27,8 +28,14 @@
   gap: 8px;
   margin-top: 16px;
   text-align: center;
+  user-select: none;
+}
+
+.location {
+  user-select: none;
 }
 
 .time {
   margin-left: 0.4em;
+  user-select: none;
 }
