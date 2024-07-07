@@ -34,7 +34,7 @@ function getBarPercentage(uvi) {
 
 export default function Graph({ all }) {
   const days = useMemo(() => getDays(all), [all]);
-  const [popup, setPopup] = useState(null);
+  const [popupAt, setPopupAt] = useState(null);
   const [timeoutId, setTimeoutId] = useState();
   const graphRef = useRef();
   const isVisible = useVisibility();
@@ -43,10 +43,10 @@ export default function Graph({ all }) {
     graphRef.current.scrollLeft = 0;
   }, [isVisible]);
 
-  const handleBarClick = (uvi, level) => {
+  const handleBarClick = (at) => {
     clearTimeout(timeoutId);
-    setPopup({ level, uvi });
-    setTimeoutId(setTimeout(() => setPopup(null), 2000));
+    setPopupAt(at);
+    setTimeoutId(setTimeout(() => setPopupAt(null), 2000));
   };
 
   const renderHour = (hour) => {
@@ -57,15 +57,27 @@ export default function Graph({ all }) {
     return (
       <div
         key={hour.at}
-        id={hour.at}
         className={styles.hour}
       >
         <div className={styles.bar}>
           <div
             className={`${styles.fill} ${hour.level}`}
             style={style}
-            onClick={() => handleBarClick(hour.uvi, hour.level)}
-          />
+            onClick={() => handleBarClick(hour.at)}
+          >
+            { popupAt === hour.at && (
+              <div className={styles.anchor}>
+                <div className={styles.popup}>
+                  <div className={`${styles.level} ${hour.level}`}>
+                    { hour.uvi }
+                  </div>
+                  <div className={styles.when}>
+                    { hour.time }
+                  </div>
+                </div>
+              </div>
+            ) }
+          </div>
         </div>
         <div className={styles.time}>
           { time }
@@ -97,13 +109,6 @@ export default function Graph({ all }) {
       >
         { days.map((day) => renderDay(day)) }
       </div>
-      { popup && (
-        <div className={styles.popup}>
-          <div className={popup.level}>
-            { popup.uvi }
-          </div>
-        </div>
-      ) }
       <div className={styles.version}>
         {`v${version}`}
       </div>

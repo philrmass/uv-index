@@ -12,6 +12,7 @@
   overflow-x: auto;
   border-radius: 8px;
   padding: 16px;
+  padding-top: 90px;
 }
 
 .day {
@@ -60,16 +61,26 @@
   user-select: none;
 }
 
-.popup {
+.anchor {
   position: absolute;
-  top: 0;
+  top: -8px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
+  z-index: 100;
 }
 
-.popup div {
+.popup {
+  position: relative;
+  transform: translate(0, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+.level {
   height: 1.8em;
   display: flex;
   justify-content: center;
@@ -80,6 +91,13 @@
   border-radius: 50%;
   font-size: 20px;
   font-variation-settings: 'wght' 400, 'wdth' 50;
+}
+
+.when {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #fff8;
+  white-space: pre;
 }
 
 .version {
