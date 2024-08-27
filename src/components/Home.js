@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
 import { useLocalStorage, useVisibility } from 'utilities/hooks';
-import { determineAddress, isCurrentHour } from '../utilities/general';
+import { determineAddress, getCurrentHour, processRecord } from '../utilities/general';
 import Current from './Current';
 import Graph from './Graph';
+import Spinner from './Spinner';
 import styles from './Home.module.css';
 
+const spinnerMs = 400;
 const portlandLat = 45.475901;
 const portlandLong = -122.649002;
 
@@ -25,44 +27,78 @@ async function getAddress(lat, long) {
   return address;
 }
 
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// ??? improve logo (sun with beams)
 export default function Home() {
   const [refresh, setRefresh] = useState(false);
+  const [spinnerShown, setSpinnerShown] = useState(false);
   const [lat, setLat] = useLocalStorage('uLat', portlandLat);
   const [long, setLong] = useLocalStorage('uLong', portlandLong);
   const [address, setAddress] = useLocalStorage('uAddress', null);
   const [all, setAll] = useLocalStorage('uAll', []);
-  const [now, setNow] = useLocalStorage('uNow', {}); 
   const isVisible = useVisibility();
-  const isCurrentTime = isCurrentHour(now.time);
+  const currentHour = getCurrentHour();
+  const isCurrent = all[0]?.time === currentHour;
 
   useEffect(() => {
-    if (isVisible && !isCurrentTime) {
+    if (isVisible && (!isCurrent || all.length <= 1)) {
       setRefresh(true);
     }
-  }, [isVisible, isCurrentTime]);
+  }, [isVisible, isCurrent, all.length]);
 
   useEffect(() => {
     (async () => {
-      const data = await getAddress(lat, long);
-      const next = determineAddress(data, lat, long);
+      const start = Date.now();
+      setSpinnerShown(true);
 
-      if (next && next !== address) {
-        setAddress(next);
-        setRefresh(true);
-      }
+      try {
+        const data = await getAddress(lat, long);
+        const next = determineAddress(data, lat, long);
+
+        if (next && next !== address) {
+          setAddress(next);
+          setRefresh(true);
+        }
+      } catch(_e) {}
+
+      const delayMs = spinnerMs - (Date.now() - start);
+      await delay(delayMs);
+      setSpinnerShown(false);
     })();
   }, [lat, long, address, setAddress]);
 
   useEffect(() => {
     if (refresh) {
       (async () => {
-        const data = await getData(lat, long);
-        setNow(data.now);
-        setAll([data.now, ...data.forecast]);
+        const start = Date.now();
+        setSpinnerShown(true);
         setRefresh(false);
+
+        try {
+          const data = await getData(lat, long);
+          const records = [data.now, ...data.forecast];
+
+          setAll(records.map((record) => processRecord(record)));
+        } catch(_e) {
+          setAll((last) => {
+            const filtered = last.filter((record) => record.time >= currentHour);
+
+            if (filtered.length === 0) {
+              return [{ time: currentHour }];
+            }
+            return filtered;
+          });
+        }
+
+        const delayMs = spinnerMs - (Date.now() - start);
+        await delay(delayMs);
+        setSpinnerShown(false);
       })();
     }
-  }, [refresh, lat, long, setAll, setNow]);
+  }, [refresh, lat, long, setAll, currentHour]);
 
   const handleLocationClick = () => {
     const hasGeo = typeof navigator.geolocation?.getCurrentPosition === 'function';
@@ -87,14 +123,17 @@ export default function Home() {
         <div className={styles.current}>
           <Current
             address={address}
-            now={now}
+            current={all[0]}
             onLocationClick={handleLocationClick}
+            onValueClick={() => setRefresh(true)}
           />
         </div>
-        <Graph
-          all={all}
-          now={now}
-        />
+        <Graph all={all} />
+        { spinnerShown && (
+          <div className={styles.spinner}>
+            <Spinner />
+          </div>
+        ) }
       </div>
     </div>
   );

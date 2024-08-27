@@ -4,6 +4,7 @@
   --light-grey: #d8d8d8;
   --grey: #808080;
   --off-white: #f8f8f8;
+  --white-overlay: #ffffff80;
 }
 
 @font-face {
@@ -46,4 +47,8 @@ button {
 
 .extreme {
   background: #d070ff;
+}
+
+.unknown {
+  background: #d0d0d0;
 }

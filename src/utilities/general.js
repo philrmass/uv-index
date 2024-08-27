@@ -1,10 +1,16 @@
-export function isCurrentHour(dateStr) {
-  const date = new Date(dateStr);
-  const now = new Date();
+export function processRecord({ time, uvi }) {
+  return {
+    time: (new Date(time)).getTime(),
+    uvi,
+  };
+}
 
-  now.setHours(now.getHours(), 0, 0, 0);
+export function getCurrentHour() {
+  const value = new Date();
 
-  return now.getTime() === date.getTime();
+  value.setHours(value.getHours(), 0, 0, 0);
+
+  return value.getTime();
 }
 
 export function printDay(dateStr) {
@@ -26,6 +32,10 @@ export function printTime(dateStr) {
 }
 
 export function getLevel(uvi) {
+  if (typeof uvi !== 'number') {
+    return 'unknown';
+  }
+
   if (uvi >= 11) {
     return 'extreme';
   } else if (uvi >= 8) {
@@ -39,10 +49,12 @@ export function getLevel(uvi) {
 }
 
 export function determineAddress(data, lat, long) {
-  if (data.city && data.state) {
-    return `${data.city}, ${data.state}`;
-  } else if(data.country) {
-    return data.country;
+  const place = data.city ?? data.town ?? data.village ?? data.county;
+
+  if (place && data.state) {
+    return `${place}, ${data.state}`;
+  } else if (data.country) {
+    return `${data.country}, ${lat.toFixed(1)}, ${long.toFixed(1)}`;
   }
 
   return `${lat.toFixed(3)}, ${long.toFixed(3)}`;
